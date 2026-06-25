@@ -1,876 +1,1176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goodbye — WebsitesBlocker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FocusAI: Smart Website Blocker & Deep Insights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+        html {
+            scroll-behavior: smooth
+        }
 
-:root{
-  --bg:#05050f;
-  --bg2:#080816;
-  --bg3:#0d0d1f;
-  --bg4:#121228;
-  --bg5:#171735;
+        :root {
+            --bg: #05050f;
+            --bg2: #080816;
+            --bg3: #0d0d1f;
+            --bg4: #121228;
+            --bg5: #171735;
+            --br: rgba(255, 255, 255, .055);
+            --br2: rgba(255, 255, 255, .10);
+            --br3: rgba(255, 255, 255, .16);
+            --tx: #ededf8;
+            --tx2: rgba(237, 237, 248, .52);
+            --tx3: rgba(237, 237, 248, .28);
+            --v: #8b7cf8;
+            --v2: #b8aaff;
+            --v3: rgba(139, 124, 248, .18);
+            --pk: #e879a0;
+            --pk2: #f4a8c7;
+            --gn: #2dd4a0;
+            --or: #f59e50;
+            --bl: #60b4fa;
+            --rd: #f87171;
+            --glow-v: rgba(139, 124, 248, .22);
+            --glow-pk: rgba(232, 121, 160, .16);
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', Consolas, monospace;
+        }
 
-  --br:rgba(255,255,255,.055);
-  --br2:rgba(255,255,255,.10);
-  --br3:rgba(255,255,255,.16);
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--tx);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-  --tx:#ededf8;
-  --tx2:rgba(237,237,248,.52);
-  --tx3:rgba(237,237,248,.28);
+        .bg-wrap {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden
+        }
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            will-change: transform;
+            mix-blend-mode: screen
+        }
+        .o1 {
+            width: 900px;
+            height: 700px;
+            top: -280px;
+            left: 50%;
+            transform: translateX(-55%);
+            background: radial-gradient(ellipse, rgba(139, 124, 248, .12) 0%, transparent 65%);
+            animation: o1d 28s ease-in-out infinite
+        }
+        .o2 {
+            width: 560px;
+            height: 560px;
+            bottom: -150px;
+            right: -100px;
+            background: radial-gradient(ellipse, rgba(232, 121, 160, .09) 0%, transparent 65%);
+            animation: o2d 34s ease-in-out infinite
+        }
+        .o3 {
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            left: -120px;
+            background: radial-gradient(ellipse, rgba(96, 180, 250, .05) 0%, transparent 65%);
+            animation: o3d 22s ease-in-out infinite
+        }
+        @keyframes o1d {
+            0%,
+            100% {
+                transform: translateX(-55%) scale(1)
+            }
+            50% {
+                transform: translateX(-48%) translateY(28px) scale(1.05)
+            }
+        }
+        @keyframes o2d {
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+            50% {
+                transform: translate(-38px, -46px)
+            }
+        }
+        @keyframes o3d {
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+            50% {
+                transform: translate(26px, -26px)
+            }
+        }
 
-  --v:#8b7cf8;
-  --v2:#b8aaff;
-  --v3:rgba(139,124,248,.18);
-  --pk:#e879a0;
-  --pk2:#f4a8c7;
-  --gn:#2dd4a0;
-  --or:#f59e50;
-  --bl:#60b4fa;
-  --rd:#f87171;
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: linear-gradient(rgba(255, 255, 255, .028) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .028) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 10%, transparent 100%);
+        }
+        .bg-vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 40%, rgba(5, 5, 15, .7) 100%)
+        }
 
-  --glow-v:rgba(139,124,248,.22);
-  --glow-pk:rgba(232,121,160,.16);
+        .wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 28px 120px
+        }
 
-  --font-display:'Instrument Serif',Georgia,serif;
-  --font-body:'DM Sans',system-ui,sans-serif;
-  --font-mono:'JetBrains Mono',Consolas,monospace;
-}
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0 18px;
+            border-bottom: 1px solid var(--br)
+        }
+        .tb-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit
+        }
+        .tb-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--v), var(--pk));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 0 22px var(--glow-v), 0 4px 12px rgba(0, 0, 0, .4)
+        }
+        .tb-name {
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: -.2px
+        }
+        .tb-ver {
+            font-size: 10px;
+            color: var(--tx3);
+            font-weight: 500;
+            margin-top: 1px;
+            font-family: var(--font-mono)
+        }
+        .tb-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 99px;
+            background: rgba(232, 121, 160, .07);
+            border: 1px solid rgba(232, 121, 160, .18);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--pk2);
+            letter-spacing: .3px;
+            font-family: var(--font-mono)
+        }
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--pk);
+            box-shadow: 0 0 8px var(--pk);
+            animation: blink 2s ease-in-out infinite
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1
+            }
+            50% {
+                opacity: .3
+            }
+        }
 
-body{
-  font-family:var(--font-body);
-  background:var(--bg);color:var(--tx);
-  min-height:100vh;overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
+        .hero {
+            text-align: center;
+            padding: 90px 0 72px;
+            animation: fadeUp .9s cubic-bezier(.16, 1, .3, 1) both
+        }
+        .hero-medallion {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px
+        }
+        .medallion-bg {
+            width: 110px;
+            height: 110px;
+            border-radius: 30px;
+            background: linear-gradient(145deg, rgba(232, 121, 160, .10), rgba(139, 124, 248, .08));
+            border: 1px solid rgba(232, 121, 160, .20);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+            box-shadow: 0 0 60px var(--glow-pk), 0 0 110px rgba(232, 121, 160, .05), 0 24px 56px rgba(0, 0, 0, .65);
+            animation: medalFloat 6s ease-in-out infinite 1s;
+            position: relative;
+            z-index: 1
+        }
+        @keyframes medalFloat {
+            0%,
+            100% {
+                transform: translateY(0) rotate(-1deg)
+            }
+            50% {
+                transform: translateY(-12px) rotate(0deg)
+            }
+        }
+        .ring {
+            position: absolute;
+            border-radius: inherit;
+            border: 1px solid rgba(232, 121, 160, .12);
+            animation: ringPulse 3.8s ease-in-out infinite;
+            pointer-events: none
+        }
+        .ring-1 {
+            inset: -14px;
+            border-radius: 40px;
+            animation-delay: 0s
+        }
+        .ring-2 {
+            inset: -30px;
+            border-radius: 50px;
+            border-color: rgba(139, 124, 248, .07);
+            animation-delay: .7s
+        }
+        @keyframes ringPulse {
+            0%,
+            100% {
+                opacity: .6;
+                transform: scale(1)
+            }
+            50% {
+                opacity: .08;
+                transform: scale(1.04)
+            }
+        }
+        .hero-kicker {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: var(--tx3);
+            font-family: var(--font-mono);
+            margin-bottom: 18px
+        }
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(38px, 6.5vw, 62px);
+            font-weight: 400;
+            letter-spacing: -.5px;
+            line-height: 1.05;
+            margin-bottom: 22px
+        }
+        .hero-title em {
+            font-style: italic;
+            background: linear-gradient(130deg, var(--pk) 0%, var(--v2) 50%, var(--v) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+        .hero-sub {
+            font-size: 15.5px;
+            color: var(--tx2);
+            max-width: 480px;
+            margin: 0 auto 46px;
+            line-height: 1.85;
+            font-weight: 400
+        }
+        .hero-ctas {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+        .btn-pri {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 28px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--v), var(--v2));
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: var(--font-body);
+            box-shadow: 0 6px 24px var(--glow-v), 0 2px 8px rgba(0, 0, 0, .3);
+            transition: all .22s cubic-bezier(.16, 1, .3, 1);
+            letter-spacing: -.1px
+        }
+        .btn-pri:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(139, 124, 248, .4), 0 4px 12px rgba(0, 0, 0, .4)
+        }
+        .btn-sec {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid var(--br2);
+            color: var(--tx2);
+            cursor: pointer;
+            text-decoration: none;
+            font-family: var(--font-body);
+            transition: all .22s cubic-bezier(.16, 1, .3, 1);
+            letter-spacing: -.1px
+        }
+        .btn-sec:hover {
+            background: rgba(255, 255, 255, .07);
+            color: var(--tx);
+            border-color: var(--br3);
+            transform: translateY(-3px)
+        }
 
-/* ── BACKGROUND ─────────────────────────────────────────────── */
-.bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+        .sec-label {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin: 64px 0 28px
+        }
+        .sec-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--br), transparent)
+        }
+        .sec-text {
+            font-size: 9.5px;
+            font-weight: 600;
+            color: var(--tx3);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+            white-space: nowrap;
+            padding: 5px 14px;
+            border-radius: 99px;
+            background: var(--bg3);
+            border: 1px solid var(--br)
+        }
 
-.bg-orb{position:absolute;border-radius:50%;filter:blur(130px);will-change:transform;mix-blend-mode:screen}
-.o1{
-  width:900px;height:700px;top:-280px;left:50%;transform:translateX(-55%);
-  background:radial-gradient(ellipse,rgba(139,124,248,.12) 0%,transparent 65%);
-  animation:o1d 28s ease-in-out infinite;
-}
-.o2{
-  width:560px;height:560px;bottom:-150px;right:-100px;
-  background:radial-gradient(ellipse,rgba(232,121,160,.09) 0%,transparent 65%);
-  animation:o2d 34s ease-in-out infinite;
-}
-.o3{
-  width:400px;height:400px;top:40%;left:-120px;
-  background:radial-gradient(ellipse,rgba(96,180,250,.05) 0%,transparent 65%);
-  animation:o3d 22s ease-in-out infinite;
-}
-@keyframes o1d{0%,100%{transform:translateX(-55%) scale(1)}50%{transform:translateX(-48%) translateY(28px) scale(1.05)}}
-@keyframes o2d{0%,100%{transform:translate(0,0)}50%{transform:translate(-38px,-46px)}}
-@keyframes o3d{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-26px)}}
+        .fb-card {
+            background: var(--bg2);
+            border: 1px solid var(--br);
+            border-radius: 20px;
+            padding: 34px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp .7s .1s cubic-bezier(.16, 1, .3, 1) both
+        }
+        .fb-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--pk) 30%, var(--v2) 70%, transparent);
+            opacity: .6
+        }
+        .fb-hed {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -.3px;
+            margin-bottom: 5px
+        }
+        .fb-sub {
+            font-size: 13px;
+            color: var(--tx2);
+            margin-bottom: 18px;
+            line-height: 1.65
+        }
+        .fb-iframe-wrap {
+            position: relative;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--br);
+            background: var(--bg3)
+        }
+        .fb-iframe-wrap iframe {
+            display: block;
+            width: 100%;
+            height: 800px;
+            border: none;
+            background: transparent;
+            filter: invert(0.9) hue-rotate(180deg)
+        }
+        .fb-iframe-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--tx3);
+            font-size: 13px;
+            gap: 12px
+        }
+        .fb-iframe-loading .spinner {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--br);
+            border-top-color: var(--v);
+            animation: spin 0.8s linear infinite
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
 
-/* Refined grid */
-.bg-grid{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
-  background-size:48px 48px;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 10%,transparent 100%);
-}
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px
+        }
+        .feat {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: var(--bg2);
+            border: 1px solid var(--br);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all .22s cubic-bezier(.16, 1, .3, 1);
+            position: relative;
+            overflow: hidden
+        }
+        .feat::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, .013), transparent);
+            pointer-events: none
+        }
+        .feat:hover {
+            border-color: var(--br2);
+            background: var(--bg3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, .35)
+        }
+        .feat-ico {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px
+        }
+        .c-v {
+            background: rgba(139, 124, 248, .10);
+            border: 1px solid rgba(139, 124, 248, .20)
+        }
+        .c-pk {
+            background: rgba(232, 121, 160, .09);
+            border: 1px solid rgba(232, 121, 160, .18)
+        }
+        .c-gn {
+            background: rgba(45, 212, 160, .07);
+            border: 1px solid rgba(45, 212, 160, .16)
+        }
+        .c-or {
+            background: rgba(245, 158, 80, .07);
+            border: 1px solid rgba(245, 158, 80, .16)
+        }
+        .c-bl {
+            background: rgba(96, 180, 250, .07);
+            border: 1px solid rgba(96, 180, 250, .16)
+        }
+        .c-rd {
+            background: rgba(248, 113, 113, .07);
+            border: 1px solid rgba(248, 113, 113, .16)
+        }
+        .c-tl {
+            background: rgba(45, 212, 200, .07);
+            border: 1px solid rgba(45, 212, 200, .16)
+        }
+        .c-yw {
+            background: rgba(250, 204, 21, .07);
+            border: 1px solid rgba(250, 204, 21, .16)
+        }
+        .feat-title {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 5px;
+            letter-spacing: -.15px
+        }
+        .feat-desc {
+            font-size: 12px;
+            color: var(--tx2);
+            line-height: 1.7
+        }
+        .feat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 5px;
+            margin-left: 7px;
+            font-family: var(--font-mono);
+            vertical-align: middle;
+            position: relative;
+            top: -1px
+        }
+        .badge-gn {
+            background: rgba(45, 212, 160, .12);
+            color: var(--gn);
+            border: 1px solid rgba(45, 212, 160, .22)
+        }
+        .badge-v {
+            background: rgba(139, 124, 248, .12);
+            color: var(--v2);
+            border: 1px solid rgba(139, 124, 248, .22)
+        }
 
-/* Vignette */
-.bg-vignette{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 40%,rgba(5,5,15,.7) 100%);
-}
+        .reinstall {
+            background: linear-gradient(135deg, rgba(139, 124, 248, .09), rgba(232, 121, 160, .06));
+            border: 1px solid rgba(139, 124, 248, .18);
+            border-radius: 18px;
+            padding: 30px 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+            flex-wrap: wrap;
+            position: relative;
+            overflow: hidden
+        }
+        .reinstall::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139, 124, 248, .4), transparent)
+        }
+        .ri-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -.3px;
+            margin-bottom: 6px
+        }
+        .ri-sub {
+            font-size: 13px;
+            color: var(--tx2);
+            line-height: 1.65;
+            max-width: 480px
+        }
+        .ri-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex-shrink: 0
+        }
 
-/* ── LAYOUT ─────────────────────────────────────────────────── */
-.wrap{
-  position:relative;z-index:1;
-  max-width:860px;margin:0 auto;padding:0 28px 120px;
-}
+        .stores {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+        .store {
+            flex: 1;
+            min-width: 240px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 22px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--tx);
+            background: var(--bg2);
+            border: 1px solid var(--br);
+            transition: all .22s cubic-bezier(.16, 1, .3, 1);
+            position: relative;
+            overflow: hidden
+        }
+        .store::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--v), transparent);
+            opacity: 0;
+            transition: .3s
+        }
+        .store:hover {
+            border-color: rgba(139, 124, 248, .24);
+            background: var(--bg3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(139, 124, 248, .09)
+        }
+        .store:hover::before {
+            opacity: 1
+        }
+        .store-ico {
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            object-fit: contain;
+            flex-shrink: 0;
+            background: var(--bg3);
+            border: 1px solid var(--br)
+        }
+        .store-ico-fb {
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            flex-shrink: 0;
+            background: var(--bg3);
+            border: 1px solid var(--br);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px
+        }
+        .store-name {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 2px;
+            letter-spacing: -.15px
+        }
+        .store-sub {
+            font-size: 11px;
+            color: var(--tx2)
+        }
+        .store-arr {
+            margin-left: auto;
+            font-size: 15px;
+            color: var(--tx3);
+            flex-shrink: 0;
+            transition: .2s;
+            font-family: var(--font-mono)
+        }
+        .store:hover .store-arr {
+            color: var(--v2)
+        }
 
-/* ── TOPBAR ─────────────────────────────────────────────────── */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:20px 0 18px;
-  border-bottom:1px solid var(--br);
-}
+        .dev-card {
+            background: var(--bg2);
+            border: 1px solid var(--br);
+            border-radius: 20px;
+            overflow: hidden
+        }
+        .dev-top {
+            padding: 30px 34px 0;
+            background: linear-gradient(180deg, rgba(139, 124, 248, .04), transparent);
+            border-bottom: 1px solid var(--br);
+            position: relative
+        }
+        .dev-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--v) 40%, var(--pk) 70%, transparent);
+            opacity: .5
+        }
+        .dev-inner {
+            display: flex;
+            align-items: flex-end;
+            gap: 24px
+        }
+        .dev-photo {
+            width: 88px;
+            height: 88px;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 1px solid var(--br2);
+            background: var(--bg3);
+            flex-shrink: 0;
+            display: block;
+            margin-bottom: -1px
+        }
+        .dev-photo-fb {
+            width: 88px;
+            height: 88px;
+            border-radius: 16px;
+            flex-shrink: 0;
+            margin-bottom: -1px;
+            background: linear-gradient(135deg, var(--bg3), var(--bg4));
+            border: 1px solid var(--br2);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--v2);
+            font-family: var(--font-mono)
+        }
+        .dev-meta {
+            padding-bottom: 20px
+        }
+        .dev-name {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -.3px;
+            margin-bottom: 3px
+        }
+        .dev-handle {
+            font-size: 11px;
+            color: var(--tx3);
+            font-family: var(--font-mono);
+            margin-bottom: 9px
+        }
+        .dev-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap
+        }
+        .dev-tag {
+            font-size: 9.5px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 5px;
+            background: var(--bg3);
+            border: 1px solid var(--br2);
+            color: var(--tx3);
+            font-family: var(--font-mono)
+        }
+        .dev-body {
+            padding: 26px 34px
+        }
+        .dev-quote {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 15px;
+            color: var(--tx2);
+            line-height: 1.9;
+            border-left: 2px solid var(--pk);
+            padding-left: 18px;
+            margin-bottom: 24px
+        }
+        .dev-socials {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+        .dev-soc {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 14px;
+            border-radius: 10px;
+            background: var(--bg3);
+            border: 1px solid var(--br2);
+            color: var(--tx2);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all .2s
+        }
+        .dev-soc:hover {
+            background: var(--bg4);
+            color: var(--tx);
+            border-color: var(--br3);
+            transform: translateY(-2px)
+        }
 
-.tb-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
-.tb-icon{
-  width:36px;height:36px;border-radius:10px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--v),var(--pk));
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-  box-shadow:0 0 22px var(--glow-v),0 4px 12px rgba(0,0,0,.4);
-}
-.tb-name{font-weight:700;font-size:14px;letter-spacing:-.2px}
-.tb-ver{font-size:10px;color:var(--tx3);font-weight:500;margin-top:1px;font-family:var(--font-mono)}
+        .footer {
+            margin-top: 70px;
+            padding-top: 30px;
+            border-top: 1px solid var(--br);
+            text-align: center
+        }
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px
+        }
+        .footer-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, var(--v), var(--pk));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 0 18px var(--glow-v)
+        }
+        .footer-name {
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: -.2px
+        }
+        .footer-pills {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 16px
+        }
+        .f-pill {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--tx3);
+            padding: 3px 10px;
+            border-radius: 99px;
+            background: var(--bg3);
+            border: 1px solid var(--br);
+            font-family: var(--font-mono);
+            letter-spacing: .2px
+        }
+        .f-pill.hi {
+            color: var(--gn);
+            background: rgba(45, 212, 160, .06);
+            border-color: rgba(45, 212, 160, .14)
+        }
+        .footer-txt {
+            font-size: 11.5px;
+            color: var(--tx3);
+            line-height: 1.8;
+            margin-bottom: 18px
+        }
+        .footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap
+        }
+        .footer-link {
+            font-size: 12px;
+            color: var(--tx3);
+            text-decoration: none;
+            font-weight: 600;
+            transition: .2s;
+            font-family: var(--font-mono);
+            font-size: 11px
+        }
+        .footer-link:hover {
+            color: var(--v2)
+        }
 
-.tb-status{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:6px 14px;border-radius:99px;
-  background:rgba(232,121,160,.07);
-  border:1px solid rgba(232,121,160,.18);
-  font-size:11px;font-weight:600;color:var(--pk2);
-  letter-spacing:.3px;font-family:var(--font-mono);
-}
-.status-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--pk);
-  box-shadow:0 0 8px var(--pk);
-  animation:blink 2s ease-in-out infinite;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px)
+            }
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+        .a1 {
+            animation: fadeUp .7s .06s cubic-bezier(.16, 1, .3, 1) both
+        }
+        .a2 {
+            animation: fadeUp .7s .12s cubic-bezier(.16, 1, .3, 1) both
+        }
+        .a3 {
+            animation: fadeUp .7s .19s cubic-bezier(.16, 1, .3, 1) both
+        }
+        .a4 {
+            animation: fadeUp .7s .25s cubic-bezier(.16, 1, .3, 1) both
+        }
+        .a5 {
+            animation: fadeUp .7s .31s cubic-bezier(.16, 1, .3, 1) both
+        }
 
-/* ── HERO ───────────────────────────────────────────────────── */
-.hero{
-  text-align:center;
-  padding:90px 0 72px;
-  animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both;
-}
-
-.hero-medallion{
-  position:relative;display:inline-flex;
-  align-items:center;justify-content:center;
-  margin-bottom:40px;
-}
-
-.medallion-bg{
-  width:110px;height:110px;border-radius:30px;
-  background:linear-gradient(145deg,rgba(232,121,160,.10),rgba(139,124,248,.08));
-  border:1px solid rgba(232,121,160,.20);
-  display:flex;align-items:center;justify-content:center;font-size:52px;
-  box-shadow:0 0 60px var(--glow-pk),0 0 110px rgba(232,121,160,.05),0 24px 56px rgba(0,0,0,.65);
-  animation:medalFloat 6s ease-in-out infinite 1s;
-  position:relative;z-index:1;
-}
-@keyframes medalFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-12px) rotate(0deg)}}
-
-.ring{
-  position:absolute;border-radius:inherit;border:1px solid rgba(232,121,160,.12);
-  animation:ringPulse 3.8s ease-in-out infinite;pointer-events:none;
-}
-.ring-1{inset:-14px;border-radius:40px;animation-delay:0s}
-.ring-2{inset:-30px;border-radius:50px;border-color:rgba(139,124,248,.07);animation-delay:.7s}
-@keyframes ringPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:.08;transform:scale(1.04)}}
-
-.hero-kicker{
-  font-size:11px;font-weight:600;letter-spacing:3.5px;
-  text-transform:uppercase;color:var(--tx3);
-  font-family:var(--font-mono);margin-bottom:18px;
-}
-
-.hero-title{
-  font-family:var(--font-display);
-  font-size:clamp(38px,6.5vw,62px);
-  font-weight:400;
-  letter-spacing:-.5px;line-height:1.05;
-  margin-bottom:22px;
-}
-.hero-title em{
-  font-style:italic;
-  background:linear-gradient(130deg,var(--pk) 0%,var(--v2) 50%,var(--v) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-
-.hero-sub{
-  font-size:15.5px;color:var(--tx2);
-  max-width:480px;margin:0 auto 46px;
-  line-height:1.85;font-weight:400;
-}
-
-.hero-ctas{
-  display:flex;align-items:center;justify-content:center;
-  gap:12px;flex-wrap:wrap;
-}
-
-.btn-pri{
-  display:inline-flex;align-items:center;gap:9px;
-  padding:13px 28px;border-radius:12px;font-size:14px;font-weight:600;
-  background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;
-  border:none;cursor:pointer;text-decoration:none;font-family:var(--font-body);
-  box-shadow:0 6px 24px var(--glow-v),0 2px 8px rgba(0,0,0,.3);
-  transition:all .22s cubic-bezier(.16,1,.3,1);letter-spacing:-.1px;
-}
-.btn-pri:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(139,124,248,.4),0 4px 12px rgba(0,0,0,.4)}
-
-.btn-sec{
-  display:inline-flex;align-items:center;gap:9px;
-  padding:13px 24px;border-radius:12px;font-size:14px;font-weight:600;
-  background:rgba(255,255,255,.04);border:1px solid var(--br2);color:var(--tx2);
-  cursor:pointer;text-decoration:none;font-family:var(--font-body);
-  transition:all .22s cubic-bezier(.16,1,.3,1);letter-spacing:-.1px;
-}
-.btn-sec:hover{background:rgba(255,255,255,.07);color:var(--tx);border-color:var(--br3);transform:translateY(-3px)}
-
-/* ── SECTION LABEL ──────────────────────────────────────────── */
-.sec-label{
-  display:flex;align-items:center;gap:18px;
-  margin:64px 0 28px;
-}
-.sec-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--br),transparent)}
-.sec-text{
-  font-size:9.5px;font-weight:600;color:var(--tx3);
-  letter-spacing:3px;text-transform:uppercase;
-  font-family:var(--font-mono);white-space:nowrap;
-  padding:5px 14px;border-radius:99px;
-  background:var(--bg3);border:1px solid var(--br);
-}
-
-/* ── FEEDBACK CARD ──────────────────────────────────────────── */
-.fb-card{
-  background:var(--bg2);border:1px solid var(--br);border-radius:20px;
-  padding:34px;position:relative;overflow:hidden;
-  animation:fadeUp .7s .1s cubic-bezier(.16,1,.3,1) both;
-}
-.fb-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--pk) 30%,var(--v2) 70%,transparent);
-  opacity:.6;
-}
-
-.fb-hed{font-weight:700;font-size:18px;letter-spacing:-.3px;margin-bottom:5px}
-.fb-sub{font-size:13px;color:var(--tx2);margin-bottom:26px;line-height:1.65}
-
-.reasons{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
-  margin-bottom:18px;
-}
-.rsn{
-  display:flex;flex-direction:column;align-items:center;gap:9px;
-  padding:14px 8px;border-radius:13px;
-  background:var(--bg3);border:1px solid var(--br);
-  cursor:pointer;font-size:11.5px;font-weight:600;color:var(--tx2);
-  font-family:var(--font-body);transition:all .2s cubic-bezier(.16,1,.3,1);
-  text-align:center;line-height:1.3;
-}
-.rsn:hover{background:var(--bg4);color:var(--tx);border-color:var(--br2);transform:translateY(-2px)}
-.rsn.on{
-  background:rgba(139,124,248,.10);
-  border-color:rgba(139,124,248,.28);
-  color:var(--v2);
-}
-.rsn .ico{font-size:21px;line-height:1}
-
-.fb-ta{
-  width:100%;background:var(--bg3);border:1px solid var(--br);border-radius:12px;
-  padding:14px 16px;color:var(--tx);font-family:var(--font-body);font-size:13px;
-  resize:vertical;min-height:82px;outline:none;transition:border-color .2s;
-  margin-bottom:18px;
-}
-.fb-ta::placeholder{color:var(--tx3)}
-.fb-ta:focus{border-color:var(--v)}
-
-.fb-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-
-.privacy-note{
-  display:flex;align-items:center;gap:8px;
-  font-size:11px;color:var(--tx3);line-height:1.55;
-}
-.lock-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:3px 9px;border-radius:6px;
-  background:rgba(45,212,160,.07);border:1px solid rgba(45,212,160,.15);
-  font-size:10px;font-weight:700;color:var(--gn);font-family:var(--font-mono);
-  white-space:nowrap;flex-shrink:0;
-}
-
-.btn-submit{
-  padding:12px 26px;border-radius:11px;font-size:13px;font-weight:600;
-  background:linear-gradient(135deg,var(--pk),var(--pk2));color:#fff;
-  border:none;cursor:pointer;font-family:var(--font-body);letter-spacing:-.1px;
-  box-shadow:0 5px 20px rgba(232,121,160,.28);
-  transition:all .22s cubic-bezier(.16,1,.3,1);white-space:nowrap;
-}
-.btn-submit:hover{transform:translateY(-2px);box-shadow:0 9px 28px rgba(232,121,160,.4)}
-.btn-submit:disabled{opacity:.45;cursor:default;transform:none}
-
-.ty-msg{
-  display:none;text-align:center;padding:28px;
-  background:rgba(45,212,160,.05);border:1px solid rgba(45,212,160,.14);
-  border-radius:14px;margin-top:18px;
-}
-.ty-ico{font-size:34px;margin-bottom:10px}
-.ty-title{font-weight:700;font-size:15px;color:var(--gn);margin-bottom:4px}
-.ty-sub{font-size:13px;color:var(--tx2)}
-
-/* ── WHAT YOU HAD ───────────────────────────────────────────── */
-.features-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-
-.feat{
-  display:flex;align-items:flex-start;gap:15px;
-  background:var(--bg2);border:1px solid var(--br);border-radius:16px;
-  padding:20px;transition:all .22s cubic-bezier(.16,1,.3,1);
-  position:relative;overflow:hidden;
-}
-.feat::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.013),transparent);
-  pointer-events:none;
-}
-.feat:hover{
-  border-color:var(--br2);background:var(--bg3);
-  transform:translateY(-3px);
-  box-shadow:0 12px 36px rgba(0,0,0,.35);
-}
-
-.feat-ico{
-  width:42px;height:42px;border-radius:11px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:20px;
-}
-.c-v  {background:rgba(139,124,248,.10);border:1px solid rgba(139,124,248,.20)}
-.c-pk {background:rgba(232,121,160,.09);border:1px solid rgba(232,121,160,.18)}
-.c-gn {background:rgba(45,212,160,.07);border:1px solid rgba(45,212,160,.16)}
-.c-or {background:rgba(245,158,80,.07);border:1px solid rgba(245,158,80,.16)}
-.c-bl {background:rgba(96,180,250,.07);border:1px solid rgba(96,180,250,.16)}
-.c-rd {background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.16)}
-.c-tl {background:rgba(45,212,200,.07);border:1px solid rgba(45,212,200,.16)}
-.c-yw {background:rgba(250,204,21,.07);border:1px solid rgba(250,204,21,.16)}
-
-.feat-title{font-weight:700;font-size:13px;margin-bottom:5px;letter-spacing:-.15px}
-.feat-desc{font-size:12px;color:var(--tx2);line-height:1.7}
-
-/* Special badge for the two new feature cards */
-.feat-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
-  padding:2px 7px;border-radius:5px;margin-left:7px;
-  font-family:var(--font-mono);vertical-align:middle;
-  position:relative;top:-1px;
-}
-.badge-gn{background:rgba(45,212,160,.12);color:var(--gn);border:1px solid rgba(45,212,160,.22)}
-.badge-v {background:rgba(139,124,248,.12);color:var(--v2);border:1px solid rgba(139,124,248,.22)}
-
-/* ── REINSTALL ──────────────────────────────────────────────── */
-.reinstall{
-  background:linear-gradient(135deg,rgba(139,124,248,.09),rgba(232,121,160,.06));
-  border:1px solid rgba(139,124,248,.18);border-radius:18px;
-  padding:30px 34px;display:flex;align-items:center;
-  justify-content:space-between;gap:22px;flex-wrap:wrap;
-  position:relative;overflow:hidden;
-}
-.reinstall::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(139,124,248,.4),transparent);
-}
-.ri-title{font-weight:700;font-size:18px;letter-spacing:-.3px;margin-bottom:6px}
-.ri-sub{font-size:13px;color:var(--tx2);line-height:1.65;max-width:420px}
-.ri-btns{display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0}
-
-/* ── STORES ─────────────────────────────────────────────────── */
-.stores{display:flex;gap:12px;flex-wrap:wrap}
-.store{
-  flex:1;min-width:240px;display:flex;align-items:center;gap:15px;
-  padding:18px 22px;border-radius:16px;text-decoration:none;color:var(--tx);
-  background:var(--bg2);border:1px solid var(--br);
-  transition:all .22s cubic-bezier(.16,1,.3,1);
-  position:relative;overflow:hidden;
-}
-.store::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--v),transparent);
-  opacity:0;transition:.3s;
-}
-.store:hover{
-  border-color:rgba(139,124,248,.24);background:var(--bg3);
-  transform:translateY(-3px);box-shadow:0 10px 30px rgba(139,124,248,.09);
-}
-.store:hover::before{opacity:1}
-.store-ico{
-  width:44px;height:44px;border-radius:11px;object-fit:contain;
-  flex-shrink:0;background:var(--bg3);border:1px solid var(--br);
-}
-.store-ico-fb{
-  width:44px;height:44px;border-radius:11px;flex-shrink:0;
-  background:var(--bg3);border:1px solid var(--br);
-  display:flex;align-items:center;justify-content:center;font-size:22px;
-}
-.store-name{font-weight:700;font-size:13px;margin-bottom:2px;letter-spacing:-.15px}
-.store-sub{font-size:11px;color:var(--tx2)}
-.store-arr{margin-left:auto;font-size:15px;color:var(--tx3);flex-shrink:0;
-  transition:.2s;font-family:var(--font-mono);}
-.store:hover .store-arr{color:var(--v2)}
-
-/* ── DEV CARD ───────────────────────────────────────────────── */
-.dev-card{
-  background:var(--bg2);border:1px solid var(--br);border-radius:20px;
-  overflow:hidden;
-}
-.dev-top{
-  padding:30px 34px 0;
-  background:linear-gradient(180deg,rgba(139,124,248,.04),transparent);
-  border-bottom:1px solid var(--br);position:relative;
-}
-.dev-top::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--v) 40%,var(--pk) 70%,transparent);
-  opacity:.5;
-}
-.dev-inner{display:flex;align-items:flex-end;gap:24px}
-.dev-photo{
-  width:88px;height:88px;border-radius:16px;object-fit:cover;
-  border:1px solid var(--br2);background:var(--bg3);flex-shrink:0;
-  display:block;margin-bottom:-1px;
-}
-.dev-photo-fb{
-  width:88px;height:88px;border-radius:16px;flex-shrink:0;margin-bottom:-1px;
-  background:linear-gradient(135deg,var(--bg3),var(--bg4));
-  border:1px solid var(--br2);display:none;align-items:center;
-  justify-content:center;font-size:28px;font-weight:800;color:var(--v2);
-  font-family:var(--font-mono);
-}
-.dev-meta{padding-bottom:20px}
-.dev-name{font-weight:700;font-size:18px;letter-spacing:-.3px;margin-bottom:3px}
-.dev-handle{
-  font-size:11px;color:var(--tx3);
-  font-family:var(--font-mono);margin-bottom:9px;
-}
-.dev-tags{display:flex;gap:5px;flex-wrap:wrap}
-.dev-tag{
-  font-size:9.5px;font-weight:600;padding:3px 8px;border-radius:5px;
-  background:var(--bg3);border:1px solid var(--br2);color:var(--tx3);
-  font-family:var(--font-mono);
-}
-.dev-body{padding:26px 34px}
-.dev-quote{
-  font-family:var(--font-display);font-style:italic;
-  font-size:15px;color:var(--tx2);line-height:1.9;
-  border-left:2px solid var(--pk);padding-left:18px;
-  margin-bottom:24px;
-}
-.dev-socials{display:flex;gap:8px;flex-wrap:wrap}
-.dev-soc{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:9px 14px;border-radius:10px;
-  background:var(--bg3);border:1px solid var(--br2);
-  color:var(--tx2);text-decoration:none;
-  font-size:12px;font-weight:600;transition:all .2s;
-}
-.dev-soc:hover{background:var(--bg4);color:var(--tx);border-color:var(--br3);transform:translateY(-2px)}
-
-/* ── FOOTER ─────────────────────────────────────────────────── */
-.footer{
-  margin-top:70px;padding-top:30px;
-  border-top:1px solid var(--br);text-align:center;
-}
-.footer-brand{
-  display:flex;align-items:center;justify-content:center;
-  gap:10px;margin-bottom:14px;
-}
-.footer-icon{
-  width:32px;height:32px;border-radius:9px;
-  background:linear-gradient(135deg,var(--v),var(--pk));
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-  box-shadow:0 0 18px var(--glow-v);
-}
-.footer-name{font-weight:700;font-size:14px;letter-spacing:-.2px}
-
-.footer-pills{
-  display:flex;align-items:center;justify-content:center;
-  gap:6px;flex-wrap:wrap;margin-bottom:16px;
-}
-.f-pill{
-  font-size:10px;font-weight:600;color:var(--tx3);
-  padding:3px 10px;border-radius:99px;
-  background:var(--bg3);border:1px solid var(--br);
-  font-family:var(--font-mono);letter-spacing:.2px;
-}
-.f-pill.hi{color:var(--gn);background:rgba(45,212,160,.06);border-color:rgba(45,212,160,.14)}
-
-.footer-txt{font-size:11.5px;color:var(--tx3);line-height:1.8;margin-bottom:18px}
-.footer-links{
-  display:flex;align-items:center;justify-content:center;
-  gap:24px;flex-wrap:wrap;
-}
-.footer-link{
-  font-size:12px;color:var(--tx3);text-decoration:none;
-  font-weight:600;transition:.2s;font-family:var(--font-mono);font-size:11px;
-}
-.footer-link:hover{color:var(--v2)}
-
-/* ── ANIMATIONS ─────────────────────────────────────────────── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(22px)}
-  to{opacity:1;transform:none}
-}
-.a1{animation:fadeUp .7s .06s cubic-bezier(.16,1,.3,1) both}
-.a2{animation:fadeUp .7s .12s cubic-bezier(.16,1,.3,1) both}
-.a3{animation:fadeUp .7s .19s cubic-bezier(.16,1,.3,1) both}
-.a4{animation:fadeUp .7s .25s cubic-bezier(.16,1,.3,1) both}
-.a5{animation:fadeUp .7s .31s cubic-bezier(.16,1,.3,1) both}
-
-/* ── RESPONSIVE ─────────────────────────────────────────────── */
-@media(max-width:640px){
-  .reasons{grid-template-columns:repeat(2,1fr)}
-  .features-grid{grid-template-columns:1fr}
-  .reinstall{flex-direction:column}
-  .ri-btns{flex-direction:column;width:100%}
-  .ri-btns .btn-pri,.ri-btns .btn-sec{justify-content:center;width:100%}
-  .stores{flex-direction:column}
-  .dev-inner{flex-direction:column;align-items:flex-start}
-  .dev-top{padding:24px 22px 0}
-  .dev-body{padding:22px}
-  .fb-card{padding:22px}
-  .fb-row{flex-direction:column;align-items:stretch}
-  .btn-submit{width:100%;justify-content:center;display:flex}
-  .hero-title{letter-spacing:-.3px}
-}
-</style>
+        @media(max-width:640px) {
+            .features-grid {
+                grid-template-columns: 1fr
+            }
+            .reinstall {
+                flex-direction: column
+            }
+            .ri-btns {
+                flex-direction: column;
+                width: 100%
+            }
+            .ri-btns .btn-pri,
+            .ri-btns .btn-sec {
+                justify-content: center;
+                width: 100%
+            }
+            .stores {
+                flex-direction: column
+            }
+            .dev-inner {
+                flex-direction: column;
+                align-items: flex-start
+            }
+            .dev-top {
+                padding: 24px 22px 0
+            }
+            .dev-body {
+                padding: 22px
+            }
+            .fb-card {
+                padding: 22px
+            }
+            .fb-iframe-wrap iframe {
+                height: 700px
+            }
+            .hero-title {
+                letter-spacing: -.3px
+            }
+        }
+        @media(max-width:480px) {
+            .fb-iframe-wrap iframe {
+                height: 900px
+            }
+        }
+    </style>
 </head>
 <body>
 
-<!-- Background layers -->
-<div class="bg-wrap">
-  <div class="bg-orb o1"></div>
-  <div class="bg-orb o2"></div>
-  <div class="bg-orb o3"></div>
-</div>
-<div class="bg-grid"></div>
-<div class="bg-vignette"></div>
-
-<div class="wrap">
-
-  <!-- TOPBAR -->
-  <nav class="topbar">
-    <a class="tb-brand" href="#">
-      <div class="tb-icon"><img src="logo.png" height="50" width="50"></div>
-      <div>
-        <div class="tb-name">WebsitesBlocker – Block Sites & Stay Focused</div>
-        <div class="tb-ver">v2.0.0 · 100% Offline</div>
-      </div>
-    </a>
-    <div class="tb-status">
-      <div class="status-dot"></div>
-      Extension Removed
+    <div class="bg-wrap">
+        <div class="bg-orb o1"></div>
+        <div class="bg-orb o2"></div>
+        <div class="bg-orb o3"></div>
     </div>
-  </nav>
+    <div class="bg-grid"></div>
+    <div class="bg-vignette"></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-medallion">
-      <div class="ring ring-2"></div>
-      <div class="ring ring-1"></div>
-      <div class="medallion-bg"><img src="logo.png" height="115" width="115"></div>
-    </div>
+    <div class="wrap">
 
-    <div class="hero-kicker">You uninstalled WebsitesBlocker – Block Sites & Stay Focused</div>
+        <!-- TOPBAR -->
+        <nav class="topbar">
+            <a class="tb-brand" href="#">
+                <div class="tb-icon"><img src="logo.png" height="50" width="50" alt="FocusAI" /></div>
+                <div>
+                    <div class="tb-name">FocusAI: Smart Website Blocker &amp; Deep Insights</div>
+                    <div class="tb-ver">v2.0.0 · 100% Offline</div>
+                </div>
+            </a>
+            <div class="tb-status">
+                <div class="status-dot"></div>
+                Extension Removed
+            </div>
+        </nav>
 
-    <h1 class="hero-title">
-      Sorry to see you go,<br>
-      <em>thanks for the journey</em>
-    </h1>
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-medallion">
+                <div class="ring ring-2"></div>
+                <div class="ring ring-1"></div>
+                <div class="medallion-bg"><img src="logo.png" height="115" width="115" alt="FocusAI" /></div>
+            </div>
+            <div class="hero-kicker">You uninstalled FocusAI: Smart Website Blocker &amp; Deep Insights</div>
+            <h1 class="hero-title">Sorry to see you go,<br /><em>thanks for the journey</em></h1>
+            <p class="hero-sub">You had complete control of your digital focus — all without giving up a single byte of your privacy. We hope you found what you needed. You're always welcome back.</p>
+            <div class="hero-ctas">
+                <a href="https://microsoftedge.microsoft.com/addons/search?developer=BishnuKartik" target="_blank" class="btn-pri"><img src="edge.png" height="30" width="30" alt="Edge" /> Reinstall on Edge</a>
+                <a href="https://chromewebstore.google.com/search/bishnukartik?hl=en-US&utm_source=ext_sidebar" target="_blank" class="btn-sec"><img src="chrome.png" height="30" width="30" alt="Chrome" /> Reinstall on Chrome</a>
+            </div>
+        </section>
 
-    <p class="hero-sub">
-      You had complete control of your digital focus —
-      all without giving up a single byte of your privacy.
-      We hope you found what you needed.
-      You're always welcome back.
-    </p>
-
-    <div class="hero-ctas">
-      <a href="https://microsoftedge.microsoft.com/addons/search?developer=BishnuKartik"
-         target="_blank" class="btn-pri"><img
-          src="edge.png" height="30" width="30"
-        /> Reinstall on Edge</a>
-      <a href="https://chromewebstore.google.com/search/bishnukartik?hl=en-US&utm_source=ext_sidebar"
-         target="_blank" class="btn-sec"><img
-          src="chrome.png" height="30" width="30"
-        />  Reinstall on Chrome</a>
-    </div>
-  </section>
-
-  <!-- FEEDBACK -->
-  <div class="sec-label a1">
-    <div class="sec-line"></div>
-    <div class="sec-text">Quick feedback</div>
-    <div class="sec-line"></div>
-  </div>
-
-  <div class="fb-card a2">
-    <div class="fb-hed">Why did you remove it?</div>
-    <div class="fb-sub">Takes 10 seconds. Completely anonymous — nothing is sent anywhere. Helps make it better for everyone.</div>
-
-    <div class="reasons" id="reasons">
-      <button class="rsn" onclick="toggleR(this)"><span class="ico">🐛</span>Found a bug</button>
-      <button class="rsn" onclick="toggleR(this)"><span class="ico">✨</span>Missing a feature</button>
-      <button class="rsn" onclick="toggleR(this)"><span class="ico">⚡</span>Too aggressive</button>
-      <button class="rsn" onclick="toggleR(this)"><span class="ico">🔄</span>Switching tools</button>
-      <button class="rsn" onclick="toggleR(this)"><span class="ico">😵</span>Too complicated</button>
-      <button class="rsn" onclick="toggleR(this)"><span class="ico">🖥️</span>Performance issues</button>
-      <button class="rsn" onclick="toggleR(this)"><span class="ico">🤷</span>Just testing</button>
-      <button class="rsn" onclick="toggleR(this)"><span class="ico">💡</span>Other reason</button>
-    </div>
-
-    <textarea class="fb-ta" id="fbTxt" placeholder="Anything else? A bug detail, a feature idea, or just a word — all appreciated. (optional)"></textarea>
-
-    <div class="fb-row">
-      <div class="privacy-note">
-        <span class="lock-badge">🔒 Anonymous</span>
-        Stored locally only — never sent to any server.
-      </div>
-      <button class="btn-submit" id="fbBtn" onclick="submitFb()">Send Feedback 💌</button>
-    </div>
-
-    <div class="ty-msg" id="tyMsg">
-      <div class="ty-ico">🙏</div>
-      <div class="ty-title">Thank you so much.</div>
-      <div class="ty-sub">Your feedback means a lot. It'll make WebsitesBlocker better for everyone. — Kartik</div>
-    </div>
-  </div>
-
-  <!-- WHAT YOU HAD -->
-  <div class="sec-label a3">
-    <div class="sec-line"></div>
-    <div class="sec-text">What you had with it</div>
-    <div class="sec-line"></div>
-  </div>
-
-  <div class="features-grid a3">
-
-    <div class="feat">
-      <div class="feat-ico c-v">🚫</div>
-      <div>
-        <div class="feat-title">Smart Site Blocking</div>
-        <div class="feat-desc">Block any site by domain, keyword, or category. Wildcards supported. Instant from the popup.</div>
-      </div>
-    </div>
-
-    <div class="feat">
-      <div class="feat-ico c-pk">🎯</div>
-      <div>
-        <div class="feat-title">Normal & Deep Focus</div>
-        <div class="feat-desc">Block selected sites or lock everything except your whitelist. Two modes, one click to start.</div>
-      </div>
-    </div>
-
-    <div class="feat">
-      <div class="feat-ico c-gn">⏱</div>
-      <div>
-        <div class="feat-title">Usage Limits</div>
-        <div class="feat-desc">Daily screen time budgets per website. Hit the limit and the site blocks itself until midnight.</div>
-      </div>
-    </div>
-
-    <div class="feat">
-      <div class="feat-ico c-or">📅</div>
-      <div>
-        <div class="feat-title">Scheduled Blocking</div>
-        <div class="feat-desc">Auto-block during work or study hours on specific days. Set it once, forget it.</div>
-      </div>
-    </div>
-
-    <div class="feat">
-      <div class="feat-ico c-bl">📱</div>
-      <div>
-        <div class="feat-title">Shorts Blocker</div>
-        <div class="feat-desc">YouTube Shorts, Instagram Reels, TikTok feed — hidden without blocking the full platform.</div>
-      </div>
-    </div>
-
-    <div class="feat">
-      <div class="feat-ico c-rd">📊</div>
-      <div>
-        <div class="feat-title">Insights Dashboard</div>
-        <div class="feat-desc">7-day block chart, streak tracker, top blocked sites, focus session history. All offline.</div>
-      </div>
-    </div>
-
-    <div class="feat">
-      <div class="feat-ico c-pk">📂</div>
-      <div>
-        <div class="feat-title">Editable Categories</div>
-        <div class="feat-desc">Block whole groups — Social Media, Gaming, Shopping. Add your own domains or create custom categories.</div>
-      </div>
-    </div>
-
-    <div class="feat">
-      <div class="feat-ico c-gn">🔐</div>
-      <div>
-        <div class="feat-title">100% Private & Offline</div>
-        <div class="feat-desc">No servers. No accounts. No analytics. Everything lived on your device. Always.</div>
-      </div>
-    </div>
-
-    <!-- NEW: Free Forever -->
-    <div class="feat">
-      <div class="feat-ico c-yw">🎁</div>
-      <div>
-        <div class="feat-title">
-          Free Forever
-          <span class="feat-badge badge-gn">Always</span>
+        <!-- WHAT YOU HAD WITH IT (Features) -->
+        <div class="sec-label a1">
+            <div class="sec-line"></div>
+            <div class="sec-text">What you had with it</div>
+            <div class="sec-line"></div>
         </div>
-        <div class="feat-desc">No subscriptions. No paywalls. No "premium" tiers. Every feature, every update — completely free. Forever. That's a promise.</div>
-      </div>
-    </div>
 
-    <!-- NEW: Zero Tracking -->
-    <div class="feat">
-      <div class="feat-ico c-tl">👁️‍🗨️</div>
-      <div>
-        <div class="feat-title">
-          Zero Tracking
-          <span class="feat-badge badge-v">Verified</span>
+        <div class="features-grid a3">
+            <div class="feat"><div class="feat-ico c-v">🚫</div><div><div class="feat-title">Smart Site Blocking</div><div class="feat-desc">Block any site by domain, keyword, or category. Wildcards supported. Instant from the popup.</div></div></div>
+            <div class="feat"><div class="feat-ico c-pk">🎯</div><div><div class="feat-title">Normal &amp; Deep Focus</div><div class="feat-desc">Block selected sites or lock everything except your whitelist. Two modes, one click to start.</div></div></div>
+            <div class="feat"><div class="feat-ico c-gn">⏱</div><div><div class="feat-title">Usage Limits</div><div class="feat-desc">Daily screen time budgets per website. Hit the limit and the site blocks itself until midnight.</div></div></div>
+            <div class="feat"><div class="feat-ico c-or">📅</div><div><div class="feat-title">Scheduled Blocking</div><div class="feat-desc">Auto-block during work or study hours on specific days. Set it once, forget it.</div></div></div>
+            <div class="feat"><div class="feat-ico c-bl">📱</div><div><div class="feat-title">Shorts Blocker</div><div class="feat-desc">YouTube Shorts, Instagram Reels, TikTok feed — hidden without blocking the full platform.</div></div></div>
+            <div class="feat"><div class="feat-ico c-rd">📊</div><div><div class="feat-title">Insights Dashboard</div><div class="feat-desc">Block charts, deflection log, streak tracker, top blocked sites – all offline.</div></div></div>
+            <div class="feat"><div class="feat-ico c-pk">🤖</div><div><div class="feat-title">AI Productivity Advisor <span class="feat-badge badge-v">Opt‑in</span></div><div class="feat-desc">Connect your Mistral AI key for personalised coaching based on your real usage data.</div></div></div>
+            <div class="feat"><div class="feat-ico c-v">🔐</div><div><div class="feat-title">Password Lock</div><div class="feat-desc">Lock settings behind a password with recovery question – perfect for parental controls.</div></div></div>
+            <div class="feat"><div class="feat-ico c-pk">📂</div><div><div class="feat-title">Editable Categories</div><div class="feat-desc">Block whole groups – Social Media, Gaming, Shopping – or create your own.</div></div></div>
+            <div class="feat"><div class="feat-ico c-gn">👻</div><div><div class="feat-title">Disappear Sites</div><div class="feat-desc">Hide domains from Google &amp; Bing search results – instant CSS injection, zero trace.</div></div></div>
+            <div class="feat"><div class="feat-ico c-or">🎭</div><div><div class="feat-title">Block Sections</div><div class="feat-desc">Silently redirect specific URL patterns (e.g. /reels) to the site's homepage.</div></div></div>
+            <div class="feat"><div class="feat-ico c-bl">↩️</div><div><div class="feat-title">Smart Redirect</div><div class="feat-desc">Send blocked sites to any URL of your choice – block list &amp; focus redirects separate.</div></div></div>
+            <div class="feat"><div class="feat-ico c-rd">🌐</div><div><div class="feat-title">Browser Time Tracker</div><div class="feat-desc">Live line chart of daily browser-open time – click any dot to see per‑site breakdown.</div></div></div>
+            <div class="feat"><div class="feat-ico c-tl">🧠</div><div><div class="feat-title">Productivity Score</div><div class="feat-desc">Label sites as productive/unproductive – get real‑time ratio and motivational feedback.</div></div></div>
+            <div class="feat"><div class="feat-ico c-yw">📦</div><div><div class="feat-title">Import / Export</div><div class="feat-desc">Back up all settings, block lists, schedules, categories as JSON or plain text.</div></div></div>
+            <div class="feat"><div class="feat-ico c-gn">🎁</div><div><div class="feat-title">Free Forever <span class="feat-badge badge-gn">Always</span></div><div class="feat-desc">No subscriptions, no paywalls. Every feature is completely free – forever.</div></div></div>
+            <div class="feat"><div class="feat-ico c-v">👁️‍🗨️</div><div><div class="feat-title">Zero Tracking <span class="feat-badge badge-v">Verified</span></div><div class="feat-desc">No telemetry, no analytics, no data collection – not even anonymous stats.</div></div></div>
         </div>
-        <div class="feat-desc">No telemetry. No usage data. No fingerprinting. Not even anonymous analytics. What you block stays between you and your browser.</div>
-      </div>
-    </div>
 
-  </div>
-
-  <!-- REINSTALL -->
-  <div class="sec-label a4">
-    <div class="sec-line"></div>
-    <div class="sec-text">Come back anytime</div>
-    <div class="sec-line"></div>
-  </div>
-
-  <div class="reinstall a4">
-    <div>
-      <div class="ri-title">Changed your mind?</div>
-      <div class="ri-sub">Reinstall takes 5 seconds. Your focus setup is yours to rebuild — and we'll make it even better each version.<br>
-You can't control your Time but manage it to become productive </div>
-    </div>
-   
-  </div>
-
-  <!-- MORE EXTENSIONS -->
-  <div class="sec-label a4">
-    <div class="sec-line"></div>
-    <div class="sec-text">More by the developer</div>
-    <div class="sec-line"></div>
-  </div>
-
-  <div class="stores a4">
-    <a href="https://chromewebstore.google.com/search/bishnukartik?hl=en-US&utm_source=ext_sidebar"
-       target="_blank" class="store">
-      <img src="chrome.png" alt="Chrome" class="store-ico" id="chromeIco"
-           onerror="this.style.display='none';document.getElementById('chromeFb').style.display='flex'">
-      <div class="store-ico-fb" id="chromeFb" style="display:none">🌐</div>
-      <div>
-        <div class="store-name">Chrome Web Store</div>
-        <div class="store-sub">All extensions for Google Chrome</div>
-      </div>
-      <div class="store-arr">↗</div>
-    </a>
-    <a href="https://microsoftedge.microsoft.com/addons/search?developer=BishnuKartik"
-       target="_blank" class="store">
-      <img src="edge.png" alt="Edge" class="store-ico" id="edgeIco"
-           onerror="this.style.display='none';document.getElementById('edgeFb').style.display='flex'">
-      <div class="store-ico-fb" id="edgeFb" style="display:none">🔷</div>
-      <div>
-        <div class="store-name">Edge Add-ons Store</div>
-        <div class="store-sub">All extensions for Microsoft Edge</div>
-      </div>
-      <div class="store-arr">↗</div>
-    </a>
-  </div>
-
-  <!-- DEVELOPER -->
-  <div class="sec-label a5">
-    <div class="sec-line"></div>
-    <div class="sec-text">Stay in touch</div>
-    <div class="sec-line"></div>
-  </div>
-
-  <div class="dev-card a5">
-    <div class="dev-top">
-      <div class="dev-inner">
-        <img src="developer.png" alt="Bishnu Kartik" class="dev-photo" id="devPhoto"
-             onerror="this.style.display='none';document.getElementById('devFb').style.display='flex'">
-        <div class="dev-photo-fb" id="devFb" style="display:none">BK</div>
-        <div class="dev-meta">
-          <div class="dev-name">Bishnu (Kartik)</div>
-          <div class="dev-handle">@bishnukartik · Nepal 🇳🇵</div>
-          <div class="dev-tags">
-            <span class="dev-tag">#AI_ML</span>
-            <span class="dev-tag">#Privacy</span>
-            <span class="dev-tag">#SelfTaught</span>
-            <span class="dev-tag">#18yo</span>
-            <span class="dev-tag">#BuiltinNepal</span>
-          </div>
+        <!-- QUICK FEEDBACK (Google Form – moved below features) -->
+        <div class="sec-label a1">
+            <div class="sec-line"></div>
+            <div class="sec-text">Quick feedback</div>
+            <div class="sec-line"></div>
         </div>
-      </div>
+
+        <div class="fb-card a2">
+            <div class="fb-hed">Why did you remove it?</div>
+            <div class="fb-sub">Fill out the form below – completely anonymous. Your feedback helps make FocusAI better for everyone.</div>
+            <div class="fb-iframe-wrap">
+                <div class="fb-iframe-loading" id="fbLoading">
+                    <div class="spinner"></div>
+                    <span>Loading form…</span>
+                </div>
+                <iframe id="fbIframe" src="https://docs.google.com/forms/d/e/1FAIpQLSdmhBzIv2YsmEhljUJqwIoMbZ83NEETyyXsbhQylLkLYpiAyA/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0" onload="document.getElementById('fbLoading').style.display='none'">Loading…</iframe>
+            </div>
+        </div>
+
+        <!-- COME BACK ANYTIME -->
+        <div class="sec-label a4">
+            <div class="sec-line"></div>
+            <div class="sec-text">Come back anytime</div>
+            <div class="sec-line"></div>
+        </div>
+
+        <div class="reinstall a4">
+            <div>
+                <div class="ri-title">Changed your mind?</div>
+                <div class="ri-sub">Reinstall takes 5 seconds. Your focus setup is yours to rebuild — and we'll make it even better each version.<br />You can't control your time, but you can manage it to become productive.</div>
+            </div>
+            <div class="ri-btns">
+                <a href="https://chromewebstore.google.com/search/bishnukartik?hl=en-US&utm_source=ext_sidebar" target="_blank" class="btn-pri" style="padding:10px 20px;font-size:13px">Reinstall on Chrome</a>
+                <a href="https://microsoftedge.microsoft.com/addons/search?developer=BishnuKartik" target="_blank" class="btn-sec" style="padding:10px 20px;font-size:13px">Reinstall on Edge</a>
+            </div>
+        </div>
+
+        <!-- MORE BY THE DEVELOPER -->
+        <div class="sec-label a4">
+            <div class="sec-line"></div>
+            <div class="sec-text">More by the developer</div>
+            <div class="sec-line"></div>
+        </div>
+
+        <div class="stores a4">
+            <a href="https://chromewebstore.google.com/search/bishnukartik?hl=en-US&utm_source=ext_sidebar" target="_blank" class="store">
+                <img src="chrome.png" alt="Chrome" class="store-ico" id="chromeIco" onerror="this.style.display='none';document.getElementById('chromeFb').style.display='flex'" />
+                <div class="store-ico-fb" id="chromeFb" style="display:none">🌐</div>
+                <div><div class="store-name">Chrome Web Store</div><div class="store-sub">All extensions for Google Chrome</div></div>
+                <div class="store-arr">↗</div>
+            </a>
+            <a href="https://microsoftedge.microsoft.com/addons/search?developer=BishnuKartik" target="_blank" class="store">
+                <img src="edge.png" alt="Edge" class="store-ico" id="edgeIco" onerror="this.style.display='none';document.getElementById('edgeFb').style.display='flex'" />
+                <div class="store-ico-fb" id="edgeFb" style="display:none">🔷</div>
+                <div><div class="store-name">Edge Add-ons Store</div><div class="store-sub">All extensions for Microsoft Edge</div></div>
+                <div class="store-arr">↗</div>
+            </a>
+        </div>
+
+        <!-- STAY IN TOUCH -->
+        <div class="sec-label a5">
+            <div class="sec-line"></div>
+            <div class="sec-text">Stay in touch</div>
+            <div class="sec-line"></div>
+        </div>
+
+        <div class="dev-card a5">
+            <div class="dev-top">
+                <div class="dev-inner">
+                    <img src="developer.png" alt="Bishnu Kartik" class="dev-photo" id="devPhoto" onerror="this.style.display='none';document.getElementById('devFb').style.display='flex'" />
+                    <div class="dev-photo-fb" id="devFb" style="display:none">BK</div>
+                    <div class="dev-meta">
+                        <div class="dev-name">Bishnu (Kartik)</div>
+                        <div class="dev-handle">@bishnukartik · Nepal 🇳🇵</div>
+                        <div class="dev-tags">
+                            <span class="dev-tag">#AI_ML</span>
+                            <span class="dev-tag">#Privacy</span>
+                            <span class="dev-tag">#SelfTaught</span>
+                            <span class="dev-tag">#18yo</span>
+                            <span class="dev-tag">#BuiltinNepal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dev-body">
+                <div class="dev-quote">"Thank you for trying FocusAI. Building something that genuinely helps people protect their focus and privacy — that's what drives me. If something didn't work the way you expected, your feedback above goes a long way. I hope you find what you need, and if you ever want to come back, the door is always open. 🙏"</div>
+                <div class="dev-socials">
+                    <a href="https://www.facebook.com/shah.bishnu.508739/" target="_blank" class="dev-soc">📘Facebook</a>
+                    <a href="https://www.linkedin.com/in/bishnukartik-sah-696244275/" target="_blank" class="dev-soc">💼 LinkedIn</a>
+                    <a href="#" class="dev-soc">🌐 Portfolio</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer a5">
+            <div class="footer-brand">
+                <div class="footer-icon"><img src="logo.png" height="45" width="45" alt="FocusAI" /></div>
+                <span class="footer-name">FocusAI: Smart Website Blocker &amp; Deep Insights</span>
+            </div>
+            <div class="footer-pills">
+                <span class="f-pill hi">Free Forever</span>
+                <span class="f-pill hi">Zero Tracking</span>
+                <span class="f-pill hi">Privacy-First</span>
+                <span class="f-pill hi">100% Offline</span>
+                <span class="f-pill hi">No Data Collection</span>
+            </div>
+            <div class="footer-txt">v2.0.0 &nbsp;·&nbsp; Built with ❤️ in Nepal</div>
+            <div class="footer-links">
+                <a href="https://chromewebstore.google.com/search/bishnukartik?hl=en-US&utm_source=ext_sidebar" target="_blank" class="footer-link">Chrome Store</a>
+                <a href="https://microsoftedge.microsoft.com/addons/search?developer=BishnuKartik" target="_blank" class="footer-link">Edge Store</a>
+                <a href="https://www.linkedin.com/in/bishnukartik-sah-696244275/" target="_blank" class="footer-link">LinkedIn</a>
+                <a href="https://www.facebook.com/shah.bishnu.508739/" target="_blank" class="footer-link">Facebook</a>
+            </div>
+        </footer>
+
     </div>
-    <div class="dev-body">
-      <div class="dev-quote">
-        "Thank you for trying WebsitesBlocker – Block Sites & Stay Focused. Building something that genuinely helps people protect their focus and privacy — that's what drives me. If something didn't work the way you expected, your feedback above goes a long way. I hope you find what you need, and if you ever want to come back, the door is always open. 🙏"
-      </div>
-      <div class="dev-socials">
-        <a href="https://www.facebook.com/shah.bishnu.508739/" target="_blank" class="dev-soc">📘Facebook</a>
-        <a href="https://www.linkedin.com/in/bishnukartik-sah-696244275/" target="_blank" class="dev-soc">💼 LinkedIn</a>
-        <a href="#" class="dev-soc">🌐 Portfolio</a>
-      </div>
-    </div>
-  </div>
 
-  <!-- FOOTER -->
-  <footer class="footer a5">
-    <div class="footer-brand">
-      <div class="footer-icon"><img src="logo.png" height="45" width="45"></div>
-      <span class="footer-name">WebsitesBlocker – Block Sites & Stay Focused</span>
-    </div>
-
-    <div class="footer-pills">
-      <span class="f-pill hi">Free Forever</span>
-      <span class="f-pill hi">Zero Tracking</span>
-      <span class="f-pill hi">Privacy-First</span>
-      <span class="f-pill hi">100% Offline</span>
-      <span class="f-pill hi">No Data Collection</span>
-    </div>
-
-    <div class="footer-txt">
-      v2.0.0 &nbsp;·&nbsp; Built with ❤️ in Nepal
-    </div>
-
-    <div class="footer-links">
-      <a href="https://chromewebstore.google.com/search/bishnukartik?hl=en-US&utm_source=ext_sidebar"
-         target="_blank" class="footer-link">Chrome Store</a>
-      <a href="https://microsoftedge.microsoft.com/addons/search?developer=BishnuKartik"
-         target="_blank" class="footer-link">Edge Store</a>
-      <a href="https://www.linkedin.com/in/bishnukartik-sah-696244275/"
-         target="_blank" class="footer-link">LinkedIn</a>
-      <a href="https://www.facebook.com/shah.bishnu.508739/"
-         target="_blank" class="footer-link">Facebook</a>
-    </div>
-  </footer>
-
-</div>
-
-<script>
-function toggleR(btn){ btn.classList.toggle("on") }
-
-function submitFb(){
-  var btn = document.getElementById("fbBtn");
-  var ty  = document.getElementById("tyMsg");
-  var selected = Array.from(document.querySelectorAll(".rsn.on"))
-    .map(function(b){ return b.textContent.trim(); });
-  var note = document.getElementById("fbTxt").value.trim();
-
-  btn.disabled = true;
-  btn.textContent = "Sending…";
-
-  console.log("[WebsitesBlocker Goodbye]", { reasons: selected, note: note });
-
-  setTimeout(function(){
-    document.getElementById("reasons").style.display = "none";
-    document.getElementById("fbTxt").style.display   = "none";
-    document.querySelector(".fb-row").style.display  = "none";
-    ty.style.display = "block";
-  }, 700);
-}
-</script>
+    <script>
+        document.getElementById('fbIframe').addEventListener('load', function() {
+            const loading = document.getElementById('fbLoading');
+            if (loading) loading.style.display = 'none';
+        });
+        setTimeout(function() {
+            const loading = document.getElementById('fbLoading');
+            if (loading) loading.style.display = 'none';
+        }, 6000);
+    </script>
 
 </body>
 </html>
