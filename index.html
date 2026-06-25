@@ -1103,7 +1103,7 @@
             </div>
         </nav>
 
-        <!-- FEEDBACK BANNER (dismissible, appears at top) -->
+        <!-- FEEDBACK BANNER (always appears on refresh – no localStorage) -->
         <div id="feedbackBanner" class="feedback-banner">
             <div class="banner-content">
                 <span class="banner-icon">📢</span>
@@ -1286,22 +1286,13 @@
             if (loading) loading.style.display = 'none';
         }, 6000);
 
-        // Dismissible feedback banner with localStorage
+        // Dismissible feedback banner – no localStorage, always shows on refresh
         function closeBanner() {
             const banner = document.getElementById('feedbackBanner');
             if (banner) {
                 banner.style.display = 'none';
-                localStorage.setItem('focusaiFeedbackBannerClosed', 'true');
             }
         }
-
-        // On load, check if banner was previously closed
-        window.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('focusaiFeedbackBannerClosed') === 'true') {
-                const banner = document.getElementById('feedbackBanner');
-                if (banner) banner.style.display = 'none';
-            }
-        });
     </script>
 
 </body>
